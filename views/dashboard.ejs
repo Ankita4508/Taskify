@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Taskify</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Segoe UI", sans-serif;
+      }
+      body {
+        background: #f3f4f6;
+        height: 100vh;
+        overflow: hidden;
+        padding-bottom: 50px 0;
+      }
+      .dashboard {
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+      }
+      .navbar {
+        margin-left: auto;
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        gap: 20px;
+        float: right;
+      }
+      .navbar a {
+        color: white;
+        text-decoration: none;
+        font-size: 16px;
+        padding: 8px 14px;
+        border-radius: 6px;
+        transition: 0.3s;
+      }
+      .navbar a:hover {
+        background: #555;
+      }
+      .header {
+        background: #1f2937;
+        color: white;
+        padding: 1rem 1.5rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .header button {
+        background: transparent;
+        border: none;
+        color: white;
+        font-size: 1.5rem;
+        cursor: pointer;
+      }
+      .layout {
+        display: flex;
+        height: 100%;
+      }
+      .sidebar {
+        width: 280px;
+        background: #fff;
+        height: 85%;
+        border-right: 1px solid #eee;
+        padding: 1rem;
+        display: flex;
+        flex-direction: column;
+        transition: transform 0.3s;
+      }
+      .sidebar.hidden {
+        transform: translateX(-100%);
+      }
+      .sidebar h2 {
+        margin-bottom: 1rem;
+      }
+      .sidebar input,
+      .sidebar select {
+        width: 100%;
+        padding: 0.6rem;
+        margin-bottom: 0.75rem;
+        border: 1px solid #ddd;
+        border-radius: 0.5rem;
+      }
+      .task-list {
+        flex: 1;
+        overflow-y: auto;
+        margin-bottom: 1rem;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+      }
+      .task-item {
+        padding: 0.75rem;
+        border-radius: 0.5rem;
+        background: #f9fafb;
+        border: 1px solid #ddd;
+        margin-bottom: 0.6rem;
+        cursor: pointer;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        transition: 0.25s;
+      }
+      .task-item:hover {
+        background: #eef2ff;
+      }
+      .ti-wrap {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+        flex: 1;
+      }
+      .ti-title {
+        font-weight: 600;
+        color: #111;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .ti-sub {
+        font-size: 12px;
+        color: #6b7280;
+      }
+      .new-task-btn {
+        background: #667eea;
+        color: white;
+        border: none;
+        padding: 0.8rem;
+        border-radius: 0.5rem;
+        cursor: pointer;
+        font-weight: bold;
+      }
+      .new-task-btn:hover {
+        background: #5a67d8;
+      }
+      .main {
+        flex: 1;
+        padding: 2rem;
+        overflow-y: auto;
+        background: #f3f4f6;
+      }
+      .empty-state {
+        text-align: center;
+        margin-top: 5rem;
+        color: #666;
+      }
+      .task-form {
+        background: white;
+        padding: 1.5rem;
+        border-radius: 0.75rem;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        max-width: 600px;
+        margin: auto;
+      }
+      .task-form input,
+      .task-form textarea,
+      .task-form select {
+        width: 100%;
+        padding: 0.7rem;
+        margin-bottom: 1rem;
+        border: 1px solid #ccc;
+        border-radius: 0.5rem;
+      }
+      .task-form button {
+        padding: 0.7rem 1.2rem;
+        border: none;
+        border-radius: 0.5rem;
+        cursor: pointer;
+        font-weight: bold;
+      }
+      .task-card-detailed {
+        background: #fff;
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      }
+      .task-card-detailed h2 {
+        margin-top: 0;
+      }
+      .task-card-detailed .meta {
+        font-size: 0.9em;
+        color: #666;
+        margin-bottom: 12px;
+      }
+      .task-actions {
+        margin-top: 15px;
+      }
+      .btn-edit,
+      .btn-delete {
+        padding: 8px 14px;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 14px;
+      }
+      .btn-edit {
+        background-color: #3b82f6;
+        color: white;
+        margin-right: 8px;
+      }
+      .btn-delete {
+        background-color: #ef4444;
+        color: white;
+      }
+      .btn-save {
+        background: #667eea;
+        color: white;
+      }
+      .btn-save:hover {
+        background: #5a67d8;
+      }
+      .btn-cancel {
+        background: #e5e7eb;
+        margin-left: 0.5rem;
+      }
+      .task-view {
+        background: white;
+        padding: 1.5rem;
+        border-radius: 0.75rem;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        max-width: 700px;
+        margin: auto;
+      }
+      .task-view h2 {
+        margin-bottom: 0.5rem;
+      }
+      .task-view .meta {
+        color: #6b7280;
+        font-size: 12.5px;
+        margin: 8px 0 14px;
+      }
+      .task-view button {
+        margin-top: 1rem;
+        margin-right: 0.5rem;
+        padding: 0.6rem 1rem;
+        border: none;
+        border-radius: 0.5rem;
+        cursor: pointer;
+      }
+      @media (max-width: 768px) {
+        .sidebar {
+          position: absolute;
+          left: 0;
+          top: 0;
+          height: 100%;
+          z-index: 10;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <p style="text-align: center; font-size: larger">
+      Welcome, <strong><%= user ? user.name : "Guest" %></strong>!
+    </p>
+
+    <div class="dashboard" id="dashboard">
+      <div class="header">
+        <h2>Taskify</h2>
+        <div class="navbar">
+          <a href="#" onclick="viewAllTasks()">View</a>
+          <a href="/login">Log out</a>
+        </div>
+        <button onclick="toggleSidebar()">☰</button>
+      </div>
+
+      <div class="layout">
+        <div class="sidebar" id="sidebar">
+          <h2>Tasks</h2>
+          <div
+            style="
+              display: flex;
+              align-items: center;
+              border: 1px solid #ccc;
+              border-radius: 15px;
+              padding: 3px 8px;
+              width: 100%;
+              max-width: 500px;
+              height: 38px;
+              background: white;
+            "
+          >
+            <input
+              type="text"
+              placeholder="Search tasks"
+              id="searchInput"
+              oninput="renderTasks()"
+              style="
+                flex: 1;
+                border: none;
+                outline: none;
+                font-size: 14px;
+                height: 100%;
+                background: transparent;
+              "
+            />
+            <i
+              id="micBtn"
+              class="fa-solid fa-microphone"
+              style="
+                cursor: pointer;
+                color: gray;
+                font-size: 16px;
+                padding-left: 8px;
+              "
+            ></i>
+          </div>
+          <br />
+          <div id="filterChips" style="display: flex; gap: 5px; flex-wrap: wrap; margin-top: 5px">
+            <div class="chip">
+              <select id="filterPriority" onchange="renderTasks()" class="chip-select">
+                <option value="">Priority</option>
+                <option value="all">All</option>
+                <option value="high">High</option>
+                <option value="medium">Medium</option>
+                <option value="low">Low</option>
+              </select>
+            </div>
+            <div class="chip">
+              <select id="filterDueDate" onchange="renderTasks()" class="chip-select">
+                <option value="">Due Date</option>
+                <option value="all">All</option>
+                <option value="today">Today</option>
+                <option value="tomorrow">Tomorrow</option>
+                <option value="week">This Week</option>
+                <option value="overdue">Overdue</option>
+              </select>
+            </div>
+          </div>
+          <div class="task-list" id="taskList"></div>
+          <button class="new-task-btn" onclick="showTaskForm()">+ New Task</button>
+        </div>
+
+        <div class="main" id="mainContent">
+          <div class="empty-state">
+            <h3>No task selected</h3>
+            <p>Create your first task to get started</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Voice Bot Button -->
+    <button id="voiceBotBtn" style="
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: #007bff;
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 60px;
+      height: 60px;
+      font-size: 24px;
+      cursor: pointer;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+    ">🎤</button>
+
+    <script>
+      let tasks = [];
+      let selectedTaskId = null;
+
+      const nowISO = () => new Date().toISOString();
+      const fmt = (iso) => new Date(iso).toLocaleString();
+      const fmtDateInput = (iso) => iso ? new Date(iso).toISOString().split("T")[0] : "";
+
+      function toggleSidebar() {
+        document.getElementById("sidebar").classList.toggle("hidden");
+      }
+
+      async function fetchTasks() {
+        try {
+          const res = await fetch("/tasks");
+          tasks = await res.json();
+          renderTasks();
+        } catch (err) {
+          console.error(err);
+        }
+      }
+
+      function renderTasks() {
+        const list = document.getElementById("taskList");
+        list.innerHTML = "";
+        const search = document.getElementById("searchInput").value.toLowerCase();
+        const priorityFilter = document.getElementById("filterPriority").value;
+        const dueDateFilter = document.getElementById("filterDueDate").value;
+        let filteredTasks = tasks;
+
+        if (search)
+          filteredTasks = filteredTasks.filter((t) => t.title.toLowerCase().includes(search));
+        if (priorityFilter && priorityFilter !== "all")
+          filteredTasks = filteredTasks.filter((t) => t.priority.toLowerCase() === priorityFilter.toLowerCase());
+
+        if (dueDateFilter && dueDateFilter !== "all") {
+          const today = new Date();
+          today.setHours(0, 0, 0, 0);
+          filteredTasks = filteredTasks.filter((t) => {
+            if (!t.dueDate) return false;
+            const due = new Date(t.dueDate);
+            due.setHours(0, 0, 0, 0);
+            if (dueDateFilter === "today") return due.getTime() === today.getTime();
+            if (dueDateFilter === "tomorrow") {
+              const tm = new Date(today); tm.setDate(today.getDate() + 1);
+              return due.getTime() === tm.getTime();
+            }
+            if (dueDateFilter === "week") {
+              const wk = new Date(today); wk.setDate(today.getDate() + 7);
+              return due >= today && due <= wk;
+            }
+            if (dueDateFilter === "overdue") return due < today;
+            return true;
+          });
+        }
+
+        if (filteredTasks.length === 0) list.innerHTML = "<div>No tasks found</div>";
+        else filteredTasks.forEach((t) => {
+          const item = document.createElement("div");
+          item.className = "task-item";
+          const due = t.dueDate ? new Date(t.dueDate).toLocaleDateString() : "N/A";
+          item.innerHTML = `<div><strong>${t.title}</strong><br>Priority: ${t.priority}<br>Due: ${due}</div>`;
+          item.onclick = () => viewTask(t._id);
+          list.appendChild(item);
+        });
+      }
+
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+      function attachMic(micBtnId, fieldId, append = false) {
+        const micBtn = document.getElementById(micBtnId);
+        const field = document.getElementById(fieldId);
+        if (!micBtn || !field || !SpeechRecognition) return;
+        micBtn.addEventListener("click", () => {
+          const recognition = new SpeechRecognition();
+          recognition.lang = "en-US";
+          recognition.interimResults = false;
+          recognition.continuous = false;
+          recognition.start();
+          micBtn.style.color = "red";
+          recognition.onresult = (event) => {
+            let transcript = Array.from(event.results).map((r) => r[0].transcript).join(" ");
+            field.value = append ? (field.value ? field.value + " " : "") + transcript : transcript;
+            if (fieldId === "searchInput") renderTasks();
+          };
+          recognition.onend = () => micBtn.style.color = "gray";
+          recognition.onerror = () => micBtn.style.color = "gray";
+        });
+      }
+
+      function showTaskForm(edit = false) {
+        const task = edit ? tasks.find((t) => t._id === selectedTaskId) : { title: "", description: "", priority: "Low", dueDate: "" };
+        if (edit && !task) return;
+        document.getElementById("mainContent").innerHTML = `
+          <form class="task-form" onsubmit="saveTask(event,${edit})">
+            <h3>${edit ? "Edit Task" : "Create Task"}</h3>
+            <input type="text" id="taskTitle" placeholder="Title" value="${task.title}" required />
+            <i id="micTitle" class="fa-solid fa-microphone"></i>
+            <textarea id="taskDesc" placeholder="Description" rows="5">${task.description}</textarea>
+            <i id="micDesc" class="fa-solid fa-microphone"></i>
+            <select id="taskPriority">
+              <option ${task.priority === "Low" ? "selected" : ""}>Low</option>
+              <option ${task.priority === "Medium" ? "selected" : ""}>Medium</option>
+              <option ${task.priority === "High" ? "selected" : ""}>High</option>
+            </select>
+            <input type="date" id="dueDateInput" value="${fmtDateInput(task.dueDate)}"/>
+            <button type="submit" class="btn-save">${edit ? "Update" : "Save"}</button>
+            <button type="button" class="btn-cancel" onclick="cancelForm()">Cancel</button>
+          </form>`;
+        attachMic("micTitle", "taskTitle", false);
+        attachMic("micDesc", "taskDesc", true);
+      }
+
+      async function saveTask(e, edit) {
+        e.preventDefault();
+        const title = document.getElementById("taskTitle").value.trim();
+        const desc = document.getElementById("taskDesc").value.trim();
+        const priority = document.getElementById("taskPriority").value;
+        const dueDate = document.getElementById("dueDateInput").value || null;
+        if (!title) return alert("Title is required");
+
+        const payload = { title, description: desc, priority, dueDate };
+        try {
+          let res;
+          if (edit) {
+            res = await fetch(`/tasks/${selectedTaskId}`, { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) });
+          } else {
+            res = await fetch("/tasks", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) });
+          }
+          const savedTask = await res.json();
+          selectedTaskId = savedTask._id;
+          await fetchTasks();
+          viewTask(selectedTaskId);
+        } catch (err) {
+          console.error(err);
+        }
+      }
+
+      function cancelForm() {
+        if (selectedTaskId) viewTask(selectedTaskId);
+        else document.getElementById("mainContent").innerHTML = `<div class="empty-state"><h3>No task selected</h3></div>`;
+      }
+
+      function viewTask(id) {
+        selectedTaskId = id;
+        const task = tasks.find((t) => t._id === id);
+        if (!task) return;
+        const due = task.dueDate ? new Date(task.dueDate).toLocaleDateString() : "No due date";
+        document.getElementById("mainContent").innerHTML = `
+          <div class="task-view">
+            <h2>${task.title}</h2>
+            <div class="meta">Created: ${fmt(task.createdAt)} &nbsp; • &nbsp; Updated: ${fmt(task.updatedAt)}</div>
+            <p>${task.description || "<em>No description.</em>"}</p>
+            <p><strong>Priority:</strong> ${task.priority}</p>
+            <p><strong>Due date:</strong> ${due}</p>
+            <button class="btn-edit" onclick="showTaskForm(true)">Edit</button>
+            <button class="btn-delete" onclick="deleteTask('${task._id}')">Delete</button>
+          </div>`;
+      }
+
+      async function deleteTask(id) {
+        if (!confirm("Delete this task?")) return;
+        try {
+          await fetch(`/tasks/${id}`, { method: "DELETE" });
+          selectedTaskId = null;
+          await fetchTasks();
+          document.getElementById("mainContent").innerHTML = `<div class="empty-state"><h3>No task selected</h3></div>`;
+        } catch (err) {
+          console.error(err);
+        }
+      }
+
+      function viewAllTasks() {
+        if (!tasks || tasks.length === 0) {
+          document.getElementById("mainContent").innerHTML = `<p style="text-align:center; margin-top:20px; color:#666;">No tasks available.</p>`;
+          return;
+        }
+        let html = `<div class="task-list">`;
+        tasks.forEach((task) => {
+          const due = task.dueDate ? new Date(task.dueDate).toLocaleDateString() : "No due date";
+          html += `
+            <div class="task-card-detailed">
+              <h2>${task.title}</h2>
+              <div class="meta">Created: ${fmt(task.createdAt)} &nbsp; • &nbsp; Updated: ${fmt(task.updatedAt)}</div>
+              <p>${task.description || "<em>No description.</em>"}</p>
+              <p><strong>Priority:</strong> ${task.priority}</p>
+              <p><strong>Due date:</strong> ${due}</p>
+              <div class="task-actions">
+                <button class="btn-edit" onclick="showTaskForm(true)">Edit</button>
+                <button class="btn-delete" onclick="deleteTask('${task._id}')">Delete</button>
+              </div>
+            </div>`;
+        });
+        html += `</div>`;
+        document.getElementById("mainContent").innerHTML = html;
+      }
+
+      attachMic("micBtn", "searchInput", false);
+      fetchTasks();
+
+      // Voice Bot
+      const voiceBotBtn = document.getElementById("voiceBotBtn");
+      if (SpeechRecognition) {
+        const botRecognition = new SpeechRecognition();
+        botRecognition.lang = "en-US";
+        botRecognition.interimResults = false;
+        botRecognition.continuous = false;
+
+        voiceBotBtn.addEventListener("click", () => {
+          botRecognition.start();
+          voiceBotBtn.style.background = "red";
+        });
+
+        botRecognition.onresult = async (event) => {
+          const transcript = event.results[0][0].transcript.toLowerCase();
+          console.log("Voice command:", transcript);
+
+          try {
+            if (transcript.startsWith("create task")) {
+              let command = transcript.replace("create task", "").trim();
+              if (!command) return alert("Please say the task name after 'create task'");
+
+              let title = "";
+              let description = "";
+              let priority = "Low";
+              let dueDate = null;
+
+              // description
+              const descMatch = command.match(/description (.+?)(?= priority| due|$)/);
+              if (descMatch) {
+                description = descMatch[1].trim();
+                command = command.replace(descMatch[0], "").trim();
+              }
+
+              // priority
+              const prioMatch = command.match(/priority (low|medium|high)/);
+              if (prioMatch) {
+                priority = prioMatch[1].charAt(0).toUpperCase() + prioMatch[1].slice(1);
+                command = command.replace(prioMatch[0], "").trim();
+              }
+
+              // due date
+              const dueMatch = command.match(/due (today|tomorrow)/);
+              if (dueMatch) {
+                const today = new Date();
+                if (dueMatch[1] === "today") dueDate = today.toISOString();
+                else if (dueMatch[1] === "tomorrow") { const tm = new Date(today); tm.setDate(today.getDate()+1); dueDate = tm.toISOString(); }
+                command = command.replace(dueMatch[0], "").trim();
+              }
+
+              title = command; // remaining is title
+              const payload = { title, description, priority, dueDate };
+              const res = await fetch("/tasks", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload)
+              });
+              const savedTask = await res.json();
+              await fetchTasks();
+              viewTask(savedTask._id);
+              alert(`Task "${savedTask.title}" created successfully!`);
+            } else if (transcript.startsWith("delete task")) {
+              const title = transcript.replace("delete task", "").trim();
+              const task = tasks.find(t => t.title.toLowerCase() === title.toLowerCase());
+              if (!task) return alert(`Task "${title}" not found`);
+              await fetch(`/tasks/${task._id}`, { method: "DELETE" });
+              await fetchTasks();
+              alert(`Task "${title}" deleted successfully!`);
+              if (selectedTaskId === task._id) {
+                document.getElementById("mainContent").innerHTML = `<div class="empty-state"><h3>No task selected</h3></div>`;
+                selectedTaskId = null;
+              }
+            } else if (transcript.startsWith("edit task")) {
+              const parts = transcript.replace("edit task", "").split("to");
+              if (parts.length < 2) return alert("Use: edit task [old title] to [new title]");
+              const oldTitle = parts[0].trim();
+              const newTitle = parts[1].trim();
+              const task = tasks.find(t => t.title.toLowerCase() === oldTitle.toLowerCase());
+              if (!task) return alert(`Task "${oldTitle}" not found`);
+              const payload = { ...task, title: newTitle };
+              await fetch(`/tasks/${task._id}`, {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload)
+              });
+              await fetchTasks();
+              viewTask(task._id);
+              alert(`Task "${oldTitle}" renamed to "${newTitle}" successfully!`);
+            } else {
+              alert("Command not recognized. Try 'create task [task name]', 'edit task [old title] to [new title]', or 'delete task [task name]'.");
+            }
+          } catch (err) {
+            console.error(err);
+            alert("Error processing command.");
+          }
+        };
+
+        botRecognition.onend = () => voiceBotBtn.style.background = "#007bff";
+        botRecognition.onerror = () => voiceBotBtn.style.background = "#007bff";
+      } else {
+        alert("Speech recognition not supported in this browser.");
+      }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Login - Taskify</title>
+  <style>
+    body {
+      width: 100%;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      font-family: "Segoe UI", sans-serif;
+      margin: 0;
+    }
+
+    /* Login container */
+    .login-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: auto;
+      padding: 10px;
+    }
+
+    .login-box {
+      background: white;
+      padding: 2rem;
+      border-radius: 1rem;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+      width: 100%;
+      max-width: 350px;
+      text-align: center;
+    }
+
+    .login-box h1 {
+      margin-bottom: 1rem;
+      color: #333;
+    }
+
+    .login-box input {
+      width: 100%;
+      padding: 0.75rem;
+      margin-bottom: 1rem;
+      border: 1px solid #ddd;
+      border-radius: 0.5rem;
+    }
+
+    .login-box button {
+      width: 100%;
+      padding: 0.75rem;
+      border: none;
+      border-radius: 0.5rem;
+      background: #667eea;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .login-box button:hover {
+      background: #5a67d8;
+    }
+
+    /* Branding */
+    .login-box .brand {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 2rem;
+    }
+
+    .login-box .brand img {
+      width: 64px;
+      height: 64px;
+      margin-bottom: 0.8rem;
+    }
+
+    .login-box .brand h1 {
+      margin: 0;
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: #111827;
+    }
+
+    .login-box .brand .tagline {
+      font-size: 0.9rem;
+      color: #6b7280;
+      margin-top: 0.2rem;
+    }
+
+    .login-box p {
+      margin-top: 1rem;
+      font-size: 0.9rem;
+    }
+
+    .login-box a {
+      color: #667eea;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .login-box a:hover {
+      text-decoration: underline;
+    }
+
+    /* 📱 Responsive Design */
+    @media (max-width: 480px) {
+      .login-box {
+        padding: 1.2rem;
+        max-width: 100%;
+      }
+      .login-box .brand img {
+        width: 48px;
+        height: 48px;
+      }
+      .login-box .brand h1 {
+        font-size: 1.3rem;
+      }
+      .login-box .brand .tagline {
+        font-size: 0.8rem;
+      }
+      .login-box input,
+      .login-box button {
+        padding: 0.65rem;
+        font-size: 0.9rem;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .login-box {
+        padding: 1.5rem;
+        max-width: 300px;
+      }
+    }
+
+    @media (min-width: 1024px) {
+      .login-box {
+        max-width: 400px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="login-container" id="login">
+    <div class="login-box">
+      <!-- Branding -->
+      <div class="brand">
+        <img src="https://cdn-icons-png.flaticon.com/512/3209/3209265.png" alt="Taskify Logo" />
+        <h1>Taskify</h1>
+        <p class="tagline">Smart Task Manager</p>
+      </div>
+
+      <!-- Login form -->
+      <form method="POST" action="/login" style="display:grid;gap:10px;">
+        <% if (error) { %>
+          <div style="color:#b00020;margin-bottom:10px;"><%= error %></div>
+        <% } %>
+
+        <input type="email" name="email" id="email" placeholder="Enter your email" value="<%= values.email || '' %>" required />
+        <input type="password" name="password" id="password" placeholder="Enter your password" required />
+        <button type="submit">Login</button>
+      </form>
+
+      <p>New here? <a href="/register">Create an account</a></p>
+      <p><a href="/forgot-password">Forgot Password?</a></p>
+     
+    </div>
+  </div>
+</body>
+</html>

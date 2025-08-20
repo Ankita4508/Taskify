@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title><%= title || "Reset Password" %></title>
+  <style>
+    body {
+      width: 100%;
+      margin: 0;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      font-family: "Segoe UI", sans-serif;
+    }
+
+    /* Container */
+    .login-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      padding: 10px;
+    }
+
+    /* Box */
+    .login-box {
+      background: white;
+      padding: 2rem;
+      border-radius: 1rem;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+      width: 100%;
+      max-width: 350px;
+      text-align: center;
+    }
+
+    .login-box h1,
+    .login-box h2 {
+      margin-bottom: 1rem;
+      color: #333;
+    }
+
+    .login-box input {
+      width: 100%;
+      padding: 0.75rem;
+      margin-bottom: 1rem;
+      border: 1px solid #ddd;
+      border-radius: 0.5rem;
+      font-size: 1rem;
+    }
+
+    .login-box button {
+      width: 100%;
+      padding: 0.75rem;
+      border: none;
+      border-radius: 0.5rem;
+      background: #667eea;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .login-box button:hover {
+      background: #5a67d8;
+    }
+
+    .login-box p {
+      margin-top: 1rem;
+      font-size: 0.9rem;
+    }
+
+    .login-box a {
+      color: #667eea;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .login-box a:hover {
+      text-decoration: underline;
+    }
+
+    /* Error / message styles */
+    .error {
+      color: #b00020;
+      margin-bottom: 1rem;
+      font-size: 0.9rem;
+    }
+
+    .message {
+      color: #047857;
+      margin-bottom: 1rem;
+      font-size: 0.9rem;
+    }
+
+    /* 📱 Responsive */
+    @media (max-width: 480px) {
+      .login-box {
+        padding: 1.2rem;
+        max-width: 100%;
+      }
+      .login-box h2 {
+        font-size: 1.2rem;
+      }
+      .login-box input,
+      .login-box button {
+        padding: 0.65rem;
+        font-size: 0.9rem;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .login-box {
+        padding: 1.5rem;
+        max-width: 300px;
+      }
+    }
+
+    @media (min-width: 1024px) {
+      .login-box {
+        max-width: 400px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="login-container" id="login">
+    <div class="login-box">
+      <form method="POST" action="/verify-otp">
+        <h2>Reset Password</h2>
+
+        <% if (error) { %>
+          <div class="error"><%= error %></div>
+        <% } %>
+
+        <% if (message) { %>
+          <div class="message"><%= message %></div>
+        <% } %>
+
+        <input type="hidden" name="email" value="<%= email || '' %>" />
+
+        <input type="text" name="otp" placeholder="Enter OTP" required />
+        <input type="password" name="password" placeholder="New Password" required />
+        <input type="password" name="confirmPassword" placeholder="Confirm New Password" required />
+        
+        <button type="submit">Reset Password</button>
+        <p><a href="/login">Back to Login</a></p>
+      </form>
+    </div>
+  </div>
+</body>
+</html>
