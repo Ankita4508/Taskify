@@ -26,6 +26,10 @@
       height: 100vh;
       overflow: hidden;
       padding-bottom: 50px 0;
+        background: #f3f4f6;
+        height: 100vh;
+        overflow: hidden;
+        padding-bottom: 50px 0;
       }
       .dashboard {
         display: flex;
@@ -563,6 +567,11 @@
             <h3>${edit ? "Edit Task" : "Create Task"}</h3><br>
             <input type="text" id="taskTitle" placeholder="Title" value="${task.title}" required >
             <textarea id="taskDesc" placeholder="Description" rows="5">${task.description}</textarea>
+            <h3>${edit ? "Edit Task" : "Create Task"}</h3>
+            <input type="text" id="taskTitle" placeholder="Title" value="${task.title}" required />
+            <i id="micTitle" class="fa-solid fa-microphone"></i>
+            <textarea id="taskDesc" placeholder="Description" rows="5">${task.description}</textarea>
+            <i id="micDesc" class="fa-solid fa-microphone"></i>
             <select id="taskPriority">
               <option ${task.priority === "Low" ? "selected" : ""}>Low</option>
               <option ${task.priority === "Medium" ? "selected" : ""}>Medium</option>
