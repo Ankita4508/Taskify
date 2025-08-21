@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Taskify - Smart Task Manager</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    /* Reset */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    body {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: #333;
+      line-height: 1.6;
+      scroll-behavior: smooth;
+    }
+
+    header {
+      background:#1f2937;
+      color: white;
+      padding: 10px 20px;
+    }
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 60px;
+      flex-wrap: wrap;
+    }
+    nav ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+    nav ul li a {
+      color: white;
+      text-decoration: none;
+      font-size: large;
+      font-weight:bold;
+      padding:5px 10px;
+      position: relative;
+      transition: all 0.3s ease-in-out;
+    }
+    nav ul li a::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: -5px;
+      width: 0%;
+      height: 2px;
+      background: white;
+      transition: width 0.3s ease-in-out;
+    }
+    nav ul li a:hover::after {
+      width: 100%;
+    }
+    .nav-center {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+    }
+    .auth-buttons {
+      display: flex;
+      gap: 10px;
+    }
+    .auth-buttons a {
+      background:linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+      padding: 6px 12px;
+      border-radius: 5px;
+      text-decoration: none;
+      font-weight: bold;
+      transition: all 0.3s ease-in-out;
+    }
+    .auth-buttons a:hover {
+      transform: scale(1.05);
+      background: #fff;
+      color:#000;
+    }
+
+    /* Containers with reduced side padding */
+    .container-custom {
+      padding: 0 8px; 
+      max-width: 1200px;
+      margin: auto;
+    }
+
+    /* Hero Section */
+    .hero {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 50px 8px;
+      gap: 40px;
+      flex-wrap: wrap;
+    }
+
+    .hero-text {
+      flex: 1;
+      min-width: 280px;
+    }
+
+    .hero-text h1 {
+      font-size: 2.5rem;
+      font-weight: bold;
+      margin-bottom: 20px;
+      color: #fff;
+    }
+
+    .hero-text p {
+      margin-bottom: 20px;
+      color: black;
+    }
+
+    /* Typing Animation */
+    .typing {
+      display: inline-block;
+      overflow: hidden;
+      white-space: nowrap;
+      border-right: 2px solid white;
+      animation: typing 4s steps(40, end) forwards, blink 0.8s step-end 5;
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: #fff;
+    }
+
+    @keyframes typing {
+      from { width: 0 }
+      to { width: 100% }
+    }
+
+    @keyframes blink {
+      from, to { border-color: transparent }
+      50% { border-color: white; }
+    }
+
+    .hero-image {
+      flex: 1;
+      min-width: 280px;
+    }
+
+    .hero-image img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 8px;
+      display: block;
+      opacity: 0;
+      transform: scale(0.95);
+      transition: all 0.6s ease-in-out;
+    }
+    .hero-image img.show {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    /* Responsive Hero */
+    @media (max-width: 768px) {
+      .hero {
+        flex-direction: column;
+        text-align: center;
+      }
+      .hero-text {
+        max-width: 100%;
+      }
+      .hero-image {
+        order: 2;
+      }
+    }
+
+    /* Features */
+    .features {
+      padding: 40px 8px;
+      text-align: center;
+    }
+
+    .features h2 {
+      color: white;
+      font-weight:bold;
+      font-size: 2rem;
+      margin-bottom: 30px;
+      opacity: 0;
+      transform: translateY(-30px);
+      transition: all 0.8s ease;
+    }
+    .features h2.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap:25px;
+    }
+
+    .feature {
+      background: #fff;
+      padding: 15px;
+      border-radius: 6px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      text-align: left;
+      opacity: 0;
+      transform: translateY(40px);
+      transition: all 0.7s ease;
+    }
+    .feature.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+   /* footer */
+   .footer {
+    background: #222;
+    color: #ddd;
+    padding: 20px 8px;
+    text-align: center;
+    font-size: 14px;
+  }
+
+  .footer-container {
+    text-align: center;
+    align-items: center;
+    max-width: 1000px;
+    margin: auto;
+    gap: 10px;
+  }
+
+  .footer-info p {
+    margin: 2px 0;
+  }
+
+  .footer-copy {
+    margin-top: 10px;
+    font-size: 12px;
+    color: #aaa;
+  }
+
+    /* Branding */
+    .brand {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin:auto;
+    }
+   .brand img {
+      width:40px;
+      height:40px;
+      margin-bottom: 0.8rem;
+    }
+    .brand h1 {
+      margin: 0;
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: #111827;
+    }
+   .brand .tagline {
+      font-size: 0.9rem;
+      color: #6b7280;
+      margin-top: 0.2rem;
+    }
+
+    .hero-title {
+      color: #fff;
+      font-weight: 800;
+      line-height: 1.2;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <nav class="container-custom">
+      <div class="brand">
+        <img src="https://cdn-icons-png.flaticon.com/512/3209/3209265.png" alt="Taskify Logo" />
+      </div>
+      <h4>Taskify</h4>
+      <div class="nav-center">
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="#contact">Contact us</a></li>
+        </ul>
+      </div>
+      <div class="auth-buttons">
+        <a href="/login">Login</a>
+        <a href="/register">Sign Up</a>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero container-custom">
+    <div class="hero-text">
+      <h1 class="hero-title">Taskify:<br><span>Smart Task Manager</span></h1>
+      <!-- Animated typing text -->
+      <h2 class="typing">Organize Your Work. Boost Your Productivity.</h2>
+      <p>A task management tool to help you stay organized and get things done.<br>
+        Taskify is a simple yet powerful task management tool designed to help individuals 
+        and teams stay organized, boost productivity, and manage their time effectively. 
+      </p>
+    </div>
+    <div class="hero-image fade-in-right">
+      <img src="uploads/homeimg.png" alt="dashboard" />
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section class="features container-custom">
+    <h2 id="features-title">Key Features</h2>
+    <div class="features-grid">
+      <div class="feature"> <h4>✅ User Authentication</h4> <p>Secure signup and login using JWT token authentication and Password confirmation and validation.</p> </div>
+      <div class="feature"> <h4>⏰ Deadlines & Reminders</h4> <p>Set due dates and receive reminders through mail, making sure you never miss important tasks or meetings.</p> </div>
+      <div class="feature"> <h4>🔒 Security</h4> <p>Only verified users can access their dashboard, keeping data safe from unauthorized access.</p> </div>
+      <div class="feature"> <h4>🎙 Speech to text</h4> <p>Create, delete and update tasks using speech recognition.</p> </div>
+    </div>
+  </section>
+
+  <!-- Contact Section -->
+   <div id="contact" class="footer">
+    <footer>
+      <div class="footer-container">
+        <div class="footer-info">
+          <p><strong>Email:</strong> support@taskify.com</p>
+          <p><strong>Phone:</strong> +91 98765 43210</p>
+          <p><strong>Address:</strong> 3rd floor, YC-CIII, G- Building YCIS, Powai Naka, Satara - 415001</p>
+        </div>
+      </div>
+      <p class="footer-copy">&copy; 2025 Taskify. All Rights Reserved.</p>
+    </footer>
+  </div>
+
+  
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const heroImg = document.querySelector(".hero-image img");
+      setTimeout(() => heroImg.classList.add("show"), 200);
+    });
+
+    // Animate features heading + cards on scroll
+    document.addEventListener("scroll", () => {
+      const title = document.getElementById("features-title");
+      const rectTitle = title.getBoundingClientRect();
+      if (rectTitle.top < window.innerHeight - 100) {
+        title.classList.add("show");
+      }
+
+      document.querySelectorAll(".feature").forEach((el, i) => {
+        const rect = el.getBoundingClientRect();
+        if (rect.top < window.innerHeight - 60) {
+          setTimeout(() => el.classList.add("show"), i * 150);
+        }
+      });
+    });
+  </script>
+</body>
+</html>

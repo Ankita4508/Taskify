@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%= title || "Task Manager" %></title>
+    <link rel="stylesheet" href="/styles.css" />
+    <style>
+      body{
+        background-color: linear-gradient(135deg, #667eea, #764ba2);
+      }
+    </style>
+  </head>
+  <body>
+  
+
+    <main style="width:100%;margin:auto;">
+      <%- body %> <!-- 👈 page content gets injected here -->
+    </main>
+  </body>
+</html>
